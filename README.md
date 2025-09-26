@@ -9,6 +9,7 @@ git clone blabla
 don't forget to chmod +x  
 
 func for zshrc, etc, need to adapt script location, don't forget to source ~/.zshrc afterwards:  
+```
 summarise_yt() {  
     if [ -z "$1" ]; then  
         echo "Usage: summarise_yt <youtube-url>"  
@@ -16,4 +17,4 @@ summarise_yt() {
     fi  
     ./summarise.sh "$1"  
 }
-
+```
