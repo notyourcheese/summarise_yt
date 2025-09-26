@@ -18,3 +18,5 @@ summarise_yt() {
     ./summarise.sh "$1"  
 }
 ```
+
+watch out for special chars; may need quotes around url to properly pass argument
