@@ -8,7 +8,7 @@ installation:
 git clone blabla
 don't forget to chmod +x
 
-func for zshrc, etc, need to adapt script location:
+func for zshrc, etc, need to adapt script location:  
 summarise_yt() {  
     if [ -z "$1" ]; then  
         echo "Usage: summarise_yt <youtube-url>"  
