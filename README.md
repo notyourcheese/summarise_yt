@@ -10,12 +10,12 @@ don't forget to chmod +x
 
 func for zshrc, etc, need to adapt script location, don't forget to source ~/.zshrc afterwards:  
 ```
-summarise_yt() {  
-    if [ -z "$1" ]; then  
-        echo "Usage: summarise_yt <youtube-url>"  
-        return 1  
-    fi  
-    ./summarise.sh "$1"  
+summarise_yt() {
+    if [[ -n "$1" ]]; then
+        ./summarise.sh "$1"
+    else
+        ./summarise.sh
+    fi
 }
 ```
 
