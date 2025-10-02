@@ -45,7 +45,7 @@ awk 'NR==1 || $0 != prev {print; prev=$0}' transcript.txt > transcript_clean.txt
 
 # --- Step 4: Add "please summarise this for me:" prefix ---
 {
-  echo "please summarise this for me:"
+  echo "Summarise the following transcript into a concise outline of the main points. Do not add any opinions, interpretations, or assumptions—only include what is directly stated in the transcript. Do not rephrase into subjective language. Keep the summary factual and neutral."
   cat transcript_clean.txt
 } > to_clipboard.txt
 
