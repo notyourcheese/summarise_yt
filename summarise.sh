@@ -3,6 +3,12 @@
 # Exit if any command fails
 set -euo pipefail
 
+# --- Use ~/temp as working directory ---
+WORKDIR="$HOME/temp"
+mkdir -p "$WORKDIR"
+echo "Using home temp directory: $WORKDIR"
+cd "$WORKDIR"
+
 # --- Step 0: Determine URL ---
 if [[ $# -ge 1 ]]; then
   URL="$1"
@@ -28,24 +34,23 @@ elif ! [[ "$URL" =~ ^https?:// ]]; then
 fi
 
 # --- Step 1: Download auto subtitles only ---
-yt-dlp --write-auto-subs --skip-download "$URL"
+yt-dlp --cookies-from-browser firefox --write-auto-subs --skip-download "$URL"
 
-# Grab the most recent .en.vtt file (yt-dlp writes it in the current dir)
+# Grab latest .en.vtt
 VTT_FILE=$(ls -t *.en.vtt | head -n 1)
 
-# --- Step 2: Clean up the .vtt into transcript.txt ---
+# --- Step 2: Clean VTT into transcript.txt ---
 sed -E 's/<[^>]*>//g' "$VTT_FILE" \
   | grep -vE "^[0-9]+$" \
   | grep -vE "^[0-9]{2}:" \
   | sed '/^\s*$/d' \
   > transcript.txt
 
-# --- Step 3: Deduplicate consecutive duplicate lines → transcript_clean.txt ---
+# --- Step 3: Deduplicate lines ---
 awk 'NR==1 || $0 != prev {print; prev=$0}' transcript.txt > transcript_clean.txt
 
-# --- Step 4: Add "please summarise this for me:" prefix ---
+# --- Step 4: Add prefix prompt ---
 {
-  # echo "Summarise the following transcript into a concise outline of the main points. Do not add any opinions, interpretations, or assumptions—only include what is directly stated in the transcript. Do not rephrase into subjective language. Keep the summary factual and neutral."
   echo "Summarize the following video transcript into a clear, factual narrative. Include only what is explicitly stated: events, actions, statements, or information from the transcript. Do not add any opinions, interpretations, assumptions, or extra commentary. Keep the summary coherent and readable as prose, focusing on the main points, and exclude any irrelevant details."
   cat transcript_clean.txt
 } > to_clipboard.txt
@@ -60,3 +65,5 @@ elif command -v xclip &>/dev/null; then
 else
   echo "Neither wl-copy nor xclip found!" >&2
 fi
+
+echo "All files saved in: $WORKDIR"
